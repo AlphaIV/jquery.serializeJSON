@@ -765,6 +765,22 @@ describe("$.serializeJSON", function () {
       });
     });
 
+    describe('ignoreEmpty', function () {
+      it("ignores all empty values", function() {
+        obj = $form.serializeJSON({ignoreEmpty: true});
+        expect(obj).toEqual({
+          "Numeric 0":     "0",
+          "Numeric 1":     "1",
+          "Numeric 2.2":   "2.2",
+          "Numeric -2.25": "-2.25",
+          "Bool true":     "true",
+          "Bool false":    "false",
+          "Null":          "null",
+          "String":        "text is always string"
+        });
+      });
+    });
+
     describe('with modified defaults', function() {
       var defaults = $.serializeJSON.defaultOptions;
       afterEach(function() {

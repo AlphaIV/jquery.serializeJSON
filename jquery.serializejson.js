@@ -26,6 +26,7 @@
       if (type !== 'skip') { // easy way to skip a value
         value = f.parseValue(input.value, type, opts); // string, number, boolean or null
         if (opts.parseWithFunction && type === '_') value = opts.parseWithFunction(value, input.name); // allow for custom parsing
+        if (opts.ignoreEmpty && (typeof(value) === 'string' && value.length === 0)) return;
         f.deepSet(serializedObject, keys, value, opts);
       }
     });
@@ -43,7 +44,8 @@
       parseAll: false, // all of the above
       parseWithFunction: null, // to use custom parser, a function like: function(val){ return parsed_val; }
       checkboxUncheckedValue: undefined, // to include that value for unchecked checkboxes (instead of ignoring them)
-      useIntKeysAsArrayIndex: false // name="foo[2]" value="v" => {foo: [null, null, "v"]}, instead of {foo: ["2": "v"]}
+      useIntKeysAsArrayIndex: false, // name="foo[2]" value="v" => {foo: [null, null, "v"]}, instead of {foo: ["2": "v"]},
+      ignoreEmpty: false // ignores empty strings
     },
 
     // Merge options with defaults to get {parseNumbers, parseBoolens, parseNulls, useIntKeysAsArrayIndex}
@@ -58,7 +60,8 @@
         parseNulls:    parseAll || f.optWithDefaults('parseNulls',    options),
         parseWithFunction:         f.optWithDefaults('parseWithFunction', options),
         checkboxUncheckedValue:    f.optWithDefaults('checkboxUncheckedValue', options),
-        useIntKeysAsArrayIndex:    f.optWithDefaults('useIntKeysAsArrayIndex', options)
+        useIntKeysAsArrayIndex:    f.optWithDefaults('useIntKeysAsArrayIndex', options),
+        ignoreEmpty:               f.optWithDefaults('ignoreEmpty', options)
       }
     },
 
@@ -68,7 +71,7 @@
 
     validateOptions: function(opts) {
       var opt, validOpts;
-      validOpts = ['parseNumbers', 'parseBooleans', 'parseNulls', 'parseAll', 'parseWithFunction', 'checkboxUncheckedValue', 'useIntKeysAsArrayIndex']
+      validOpts = ['parseNumbers', 'parseBooleans', 'parseNulls', 'parseAll', 'parseWithFunction', 'checkboxUncheckedValue', 'useIntKeysAsArrayIndex', 'ignoreEmpty']
       for (opt in opts) {
         if (validOpts.indexOf(opt) === -1) {
           throw new  Error("serializeJSON ERROR: invalid option '" + opt + "'. Please use one of " + validOpts.join(','));
