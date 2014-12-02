@@ -775,7 +775,6 @@ describe("$.serializeJSON", function () {
           "Numeric -2.25": "-2.25",
           "Bool true":     "true",
           "Bool false":    "false",
-          "Null":          "null",
           "String":        "text is always string"
         });
       });

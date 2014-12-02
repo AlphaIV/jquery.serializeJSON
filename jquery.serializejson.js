@@ -25,8 +25,8 @@
       type = keys.pop(); // the last element is always the type ("string" by default)
       if (type !== 'skip') { // easy way to skip a value
         value = f.parseValue(input.value, type, opts); // string, number, boolean or null
+        if (opts.ignoreEmpty && (typeof(value) === 'string' && (value.length === 0 || value === 'null' || value === 'undefined'))) return;
         if (opts.parseWithFunction && type === '_') value = opts.parseWithFunction(value, input.name); // allow for custom parsing
-        if (opts.ignoreEmpty && (typeof(value) === 'string' && value.length === 0)) return;
         f.deepSet(serializedObject, keys, value, opts);
       }
     });
